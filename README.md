@@ -44,7 +44,7 @@ This system enables:
 
 ## 🏗️ Architecture
 
-![Design Sprinto drawio](https://github.com/user-attachments/assets/4f939990-b1ed-4779-8c51-9fc5867117c7)
+![Design Sprinto drawio](https://github.com/user-attachments/assets/1a5a8299-b145-46f5-9750-288e2b331a88)
 
 
 ---
