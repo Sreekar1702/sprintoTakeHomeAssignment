@@ -1,0 +1,110 @@
+Database Schema
+
+policy_template:  Stores default templates provided by Sprinto.
+CREATE TABLE policy_template (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+policy_template_version : Tracks versions of templates.
+CREATE TABLE policy_template_version (
+    id UUID PRIMARY KEY,
+    template_id UUID REFERENCES policy_template(id),
+    version_number INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+
+
+
+company : Represents customer companies.
+CREATE TABLE company (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+policy : The policy created for a company (based on template or custom).
+CREATE TABLE policy (
+    id UUID PRIMARY KEY,
+    company_id UUID REFERENCES company(id),
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    created_from_template BOOLEAN,
+    template_version_id UUID REFERENCES policy_template_version(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+policy_version : Each time a policy is changed, including configuration.
+CREATE TABLE policy_version (
+    id UUID PRIMARY KEY,
+    policy_id UUID REFERENCES policy(id),
+    version_number INT NOT NULL,
+    content TEXT NOT NULL,
+    config JSON, -- SLA configs, etc.
+    status VARCHAR(20) CHECK (status IN ('started', 'in_progress' , 'pending_approval', 'approved')),
+    approved_by UUID, -- references employee if needed
+    approved_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT FALSE);
+
+employee : Represents an employee of a company.
+CREATE TABLE employee (
+    id UUID PRIMARY KEY,
+    company_id UUID REFERENCES company(id),
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    role_id UUID REFERENCES role(id),
+    joining_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+role : Defines roles like Engineering, HR, etc.
+CREATE TABLE role (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+
+role_policy : Maps roles to the policies they must acknowledge.
+CREATE TABLE role_policy (
+    role_id UUID REFERENCES role(id),
+    policy_id UUID REFERENCES policy(id),
+    PRIMARY KEY (role_id, policy_id)
+);
+
+acknowledgement_event : Captures the initiation of an acknowledgment process (new join, annual, manual).
+CREATE TABLE acknowledgement_event (
+    id UUID PRIMARY KEY,
+    company_id UUID REFERENCES company(id),
+    event_type VARCHAR(50) CHECK (event_type IN ('onboarding', 'annual', 'manual')),
+    initiated_by UUID, -- optional, admin who triggered it
+    initiated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+acknowledgement_request : Links employees to a specific acknowledgment event and policy version.
+CREATE TABLE acknowledgement_request (
+    id UUID PRIMARY KEY,
+    employee_id UUID REFERENCES employee(id),
+    policy_version_id UUID REFERENCES policy_version(id),
+    event_id UUID REFERENCES acknowledgement_event(id),
+    due_date DATE,
+    acknowledged_at TIMESTAMP,
+    status VARCHAR(20) CHECK (status IN ('pending', 'acknowledged', 'overdue')) DEFAULT 'pending'
+);
+
+policy_upgrade_prompt : Tracks if customers are notified of new template versions.
+CREATE TABLE policy_upgrade_prompt (
+    id UUID PRIMARY KEY,
+    policy_id UUID REFERENCES policy(id),
+    template_version_id UUID REFERENCES policy_template_version(id),
+    notified_at TIMESTAMP,
+    customer_acted BOOLEAN DEFAULT FALSE );
