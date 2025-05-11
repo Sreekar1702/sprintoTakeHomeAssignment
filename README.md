@@ -44,9 +44,8 @@ This system enables:
 
 ## 🏗️ Architecture
 
-Frontend (React) → API Gateway → Microservices (via REST/gRPC)
-                                 ↓
-                   PostgreSQL / Redis / Kafka / S3 / ELK / Prometheus
+![Design Sprinto drawio](https://github.com/user-attachments/assets/4f939990-b1ed-4779-8c51-9fc5867117c7)
+
 
 ---
 
@@ -198,4 +197,5 @@ Frontend (React) → API Gateway → Microservices (via REST/gRPC)
 - The system maintains a **complete acknowledgement history** per employee to support compliance audits and traceability.
 
 ---
+
 
