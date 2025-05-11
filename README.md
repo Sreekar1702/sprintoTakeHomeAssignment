@@ -89,11 +89,6 @@ Frontend (React) → API Gateway → Microservices (via REST/gRPC)
 ---
 
 🧪 Sample API Endpoints
-# Policy Management System
-
-This system provides policy management and compliance tracking for companies, supporting features like policy creation, approvals, acknowledgements, role-based access, version control, and audit logging.
-
----
 
 ## 📦 Key Services and API Endpoints
 
@@ -116,7 +111,6 @@ This system provides policy management and compliance tracking for companies, su
 - **Request Payload**: Updated policy content, version, etc.
 - **Response**: Success or failure message.
 
----
 
 ### ✅ Policy Approval Service
 
@@ -126,7 +120,7 @@ This system provides policy management and compliance tracking for companies, su
 - **Request Payload**: Approver ID.
 - **Response**: Approval status.
 
----
+
 
 ### 🙋 Employee Acknowledgement Service
 
@@ -141,7 +135,6 @@ This system provides policy management and compliance tracking for companies, su
 - **Description**: Retrieves the acknowledgement status of policies for a specific employee.
 - **Response**: List of policies with their acknowledgement status.
 
----
 
 ### 👥 Role and Policy Mapping Service
 
@@ -156,7 +149,6 @@ This system provides policy management and compliance tracking for companies, su
 - **Description**: Retrieves the list of policies assigned to a particular role.
 - **Response**: List of policy IDs.
 
----
 
 ### 🧑 Employee Service
 
@@ -171,7 +163,6 @@ This system provides policy management and compliance tracking for companies, su
 - **Description**: Retrieves the acknowledgement status for all policies of a specific employee.
 - **Response**: List of policies with their acknowledgement status.
 
----
 
 ### 📜 Audit Log Service
 
@@ -182,3 +173,29 @@ This system provides policy management and compliance tracking for companies, su
 - **Response**: Success message.
 
 ---
+
+## 🔄 Workflow and Functions
+
+### 🛠️ Policy Creation and Approval Flow
+
+- A company administrator can create a new policy using either a predefined template or custom content.
+- If a template is used, the system creates a `policy` record based on the selected `policy_template`.
+- The newly created policy is marked as **"draft"** and awaits approval by a designated approver (e.g., CTO).
+- Upon approval, the policy status transitions to **"approved"** and becomes the company's active version.
+
+
+### 🙋 Employee Acknowledgement Flow
+
+- When a **new employee** is onboarded, the system automatically triggers **acknowledgement requests** for all active policies with a **30-day** deadline.
+- For **periodic acknowledgements** (e.g., annual), the system tracks due dates and sends timely reminders.
+- If an employee **misses the acknowledgement deadline**, the system generates an **alert**, escalating it to a CXO or designated authority.
+- In case of **modified policies**, only the updated policies are sent for re-acknowledgement.
+
+
+### 📋 Audit and Monitoring
+
+- Every significant action (e.g., policy creation, updates, approvals, acknowledgements) is **logged** in the audit system.
+- The system maintains a **complete acknowledgement history** per employee to support compliance audits and traceability.
+
+---
+
