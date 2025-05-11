@@ -86,3 +86,99 @@ Frontend (React) → API Gateway → Microservices (via REST/gRPC)
 
 ![diagram-export-11-05-2025-19_22_06](https://github.com/user-attachments/assets/c56926d4-6e8d-4b40-9673-3833ec80f9f8)
 
+---
+
+🧪 Sample API Endpoints
+# Policy Management System
+
+This system provides policy management and compliance tracking for companies, supporting features like policy creation, approvals, acknowledgements, role-based access, version control, and audit logging.
+
+---
+
+## 📦 Key Services and API Endpoints
+
+### 📝 Policy Service
+
+#### Create Policy
+- **Endpoint**: `POST /api/policies`
+- **Description**: Creates a new policy (from a template or custom).
+- **Request Payload**: Policy type, policy name, content, etc.
+- **Response**: Policy ID and details.
+
+#### Get All Policies
+- **Endpoint**: `GET /api/policies`
+- **Description**: Retrieves a list of all policies in the system.
+- **Response**: List of policy objects with their current status and version.
+
+#### Update Policy
+- **Endpoint**: `PUT /api/policies/{policy_id}`
+- **Description**: Updates an existing policy.
+- **Request Payload**: Updated policy content, version, etc.
+- **Response**: Success or failure message.
+
+---
+
+### ✅ Policy Approval Service
+
+#### Approve Policy
+- **Endpoint**: `POST /api/policies/{policy_id}/approve`
+- **Description**: Marks a policy as approved by the designated approver (e.g., CTO).
+- **Request Payload**: Approver ID.
+- **Response**: Approval status.
+
+---
+
+### 🙋 Employee Acknowledgement Service
+
+#### Acknowledge Policy
+- **Endpoint**: `POST /api/acknowledge/{policy_id}`
+- **Description**: Allows an employee to acknowledge a policy.
+- **Request Payload**: Employee ID, acknowledgement type (new join, periodic, manual).
+- **Response**: Acknowledgement status.
+
+#### Get Acknowledgement Status
+- **Endpoint**: `GET /api/acknowledge/status`
+- **Description**: Retrieves the acknowledgement status of policies for a specific employee.
+- **Response**: List of policies with their acknowledgement status.
+
+---
+
+### 👥 Role and Policy Mapping Service
+
+#### Assign Policies to Role
+- **Endpoint**: `POST /api/roles/{role_id}/assign_policies`
+- **Description**: Assigns a list of policies to a specific employee role.
+- **Request Payload**: List of policy IDs.
+- **Response**: Success message.
+
+#### Get Policies for Role
+- **Endpoint**: `GET /api/roles/{role_id}/policies`
+- **Description**: Retrieves the list of policies assigned to a particular role.
+- **Response**: List of policy IDs.
+
+---
+
+### 🧑 Employee Service
+
+#### New Employee Onboarding
+- **Endpoint**: `POST /api/employees/onboard`
+- **Description**: Onboards a new employee and triggers the policy acknowledgement workflow.
+- **Request Payload**: Employee details, company ID, etc.
+- **Response**: Employee ID and status of the acknowledgement process.
+
+#### Get Employee Acknowledgement Status
+- **Endpoint**: `GET /api/employees/{employee_id}/acknowledgement`
+- **Description**: Retrieves the acknowledgement status for all policies of a specific employee.
+- **Response**: List of policies with their acknowledgement status.
+
+---
+
+### 📜 Audit Log Service
+
+#### Log Policy Action
+- **Endpoint**: `POST /api/audit/log`
+- **Description**: Logs actions like policy creation, modification, approval, etc.
+- **Request Payload**: Action details (type, actor, target, timestamp).
+- **Response**: Success message.
+
+---
