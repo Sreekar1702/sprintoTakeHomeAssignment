@@ -1,140 +1,88 @@
+# SOC 2 Compliance Policy Management System
 
-**🛡️ Sprinto-Like Policy Management System**
+This repository contains a modular, microservice-based system to manage policy generation, approval, acknowledgement, and compliance tracking for SOC 2 and similar frameworks.
 
-**Purpose**  
-This document outlines the services and architecture required to implement a policy management system similar to Sprinto. It includes service responsibilities, key functions, and background scheduled jobs for compliance and audit needs.
+## 📘 Table of Contents
 
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Microservices](#microservices)
+- [Data Model](#data-model)
+- [APIs](#apis)
+- [Monitoring & Observability](#monitoring--observability)
 
-**Core Microservices**
+---
 
-**1. PolicyService**  
-**Responsibilities:**
-- Manage company-specific policies (creation, versioning, updates)
-- Support config inputs and activation flows
+## 🧩 Overview
 
-**Key Functions:**
-- `createPolicy(companyId, inputData)`
-- `updatePolicyConfig(policyId, config)`
-- `getCompanyPolicies(companyId)`
-- `createNewPolicyVersion(policyId, updatedData)`
+This system enables:
+- Management of default and custom policies
+- Approval workflows
+- Role-based acknowledgement workflows
+- Policy version control
+- Audit-friendly history of all actions
+- Periodic & event-based triggers
 
+---
 
-**2. TemplateService (Internal)**  
-**Responsibilities:**
-- Maintain global policy templates and versions
-- Generate initial policy from template for companies
+## ✅ Features
 
-**Key Functions:**
-- `createTemplate(name, description)`
-- `createTemplateVersion(templateId, content)`
-- `generateCompanyPolicyFromTemplate(companyId, templateVersionId, config)`
+- Default & custom policies per company
+- Versioned policies with config support
+- Role-based policy mapping
+- CTO-level approval workflows
+- Multi-mode policy acknowledgement:
+  - New hire
+  - Periodic (e.g., annual)
+  - Manual trigger
+- Alerting for overdue acknowledgements
+- Escalation workflows
+- Audit trails for all activity
 
+---
 
-**3. ApprovalService**  
-**Responsibilities:**
-- Handle policy version approval flows
-- Track approver identity and timestamps
+## 🏗️ Architecture
 
-**Key Functions:**
-- `approvePolicyVersion(policyVersionId, approverId)`
-- `getPendingApprovals(companyId)`
-- `isPolicyApproved(policyId)`
+Frontend (React) → API Gateway → Microservices (via REST/gRPC)
+                                 ↓
+                   PostgreSQL / Redis / Kafka / S3 / ELK / Prometheus
 
+---
 
-**4. AcknowledgementService**  
-**Responsibilities:**
-- Manage acknowledgements (join-time, periodic, manual)
-- Record acknowledgements and SLA tracking
+## ⚙️ **Microservices**
 
-**Key Functions:**
-- `requestAcknowledgement(employeeId, policyVersionId, type)`
-- `recordAcknowledgement(employeeId, requestId)`
-- `getAcknowledgementStatus(policyId, employeeId)`
+| Service                     | Responsibilities                                   |
+| --------------------------- | -------------------------------------------------- |
+| **Policy Service**          | CRUD for templates and custom policies, versioning |
+| **Approval Service**        | Approval workflow (CTO, policy lifecycle)          |
+| **Acknowledgement Service** | Manage acknowledgement states, due dates           |
+| **Role Mapping Service**    | Policy-Role mapping logic                          |
+| **Notification Service**    | Sends emails, Slack alerts, escalations            |
+| **Scheduler Service**       | Triggers periodic or SLA-based checks              |
+| **Audit Log Service**       | Writes structured logs to ELK                      |
+| **User Service**            | Employee profile, role info                        |
+| **Company Service**         | Tenant configurations, settings                    |
 
+---
 
-**5. EmployeeService**  
-**Responsibilities:**
-- Manage employee records, onboarding, and role assignments
+## 🗃️ Data Model
 
-**Key Functions:**
-- `addEmployee(employeeData)`
-- `assignRoleToEmployee(employeeId, roleId)`
-- `onboardEmployee(employeeId)`
+### Database Schema
 
+| Table Name                | Description                                                                |
+|---------------------------|----------------------------------------------------------------------------|
+| `policy_template`         | Stores default policy templates provided by Sprinto.                       |
+| `policy_template_version` | Tracks version history of each policy template.                            |
+| `company`                 | Represents customer companies using the system.                            |
+| `policy`                  | Stores company-specific policies (custom or based on a template).          |
+| `policy_version`          | Tracks changes to a policy, including content and configuration updates.   |
+| `employee`                | Represents an individual employee within a company.                        |
+| `role`                    | Defines organizational roles (e.g., Engineering, HR).                      |
+| `role_policy`             | Maps roles to the policies that employees in those roles must acknowledge. |
+| `acknowledgement_event`   | Records initiation of acknowledgment cycles (e.g., new join, annual).      |
+| `acknowledgement_request` | Links employees to an acknowledgment event and a specific policy version.  |
+| `policy_upgrade_prompt`   | Tracks whether a company has been notified of a new template version.      |
 
-**6. RolePolicyService**  
-**Responsibilities:**
-- Map roles to policies
-- Fetch required policies per role
+![diagram-export-11-05-2025-19_22_06](https://github.com/user-attachments/assets/c56926d4-6e8d-4b40-9673-3833ec80f9f8)
 
-**Key Functions:**
-- `assignPolicyToRole(roleId, policyId)`
-- `getPoliciesForRole(roleId)`
-
-
-**7. ComplianceService**  
-**Responsibilities:**
-- Track SLA deadlines
-- Trigger periodic and onboarding-related acknowledgements
-- Handle escalations
-
-**Key Functions:**
-- `triggerAnnualAcknowledgement(companyId)`
-- `triggerJoinAcknowledgement(employeeId)`
-- `getOverdueAcknowledgements(companyId)`
-- `escalateOverdueToCXO(policyId, employeeId)`
-
-
-**8. NotificationService**  
-**Responsibilities:**
-- Send reminders, alerts, and escalation messages
-
-**Key Functions:**
-- `sendAcknowledgementReminder(employeeId, policyId)`
-- `sendEscalationToCXO(companyId, employeeId, policyId)`
-
-
-**9. AuditService**  
-**Responsibilities:**
-- Maintain logs for all compliance actions
-
-**Key Functions:**
-- `logApproval(policyVersionId, approverId)`
-- `logAcknowledgement(requestId, employeeId)`
-- `getAuditTrailForPolicy(policyId)`
-
-
-**10. PolicyUpgradeService**  
-**Responsibilities:**
-- Detect and apply newer template versions
-
-**Key Functions:**
-- `checkUpgradeAvailable(policyId)`
-- `suggestUpgrade(companyId)`
-- `applyUpgrade(policyId, newTemplateVersionId)`
-
-
-**Scheduled Jobs (Background Tasks)**
-
-**daily_acknowledgement_check** - Daily: Track SLA breaches in pending acks  
-**annual_acknowledgement_trigger** - Yearly/Monthly: Trigger annual policy acknowledgement  
-**escalation_notifier** - Hourly: Notify CXO if SLAs are missed  
-**template_upgrade_notifier** - Weekly: Alert companies about updated templates
-
-
-**Tech Stack Suggestions**
-
-- **Communication:** REST/gRPC for inter-service APIs  
-- **Database:** PostgreSQL / DynamoDB  
-- **Messaging & Async Processing:** SQS / Kafka  
-- **Authentication & Authorization:** JWT with Role-Based Access Control  
-- **Audit Logging:** Append-only DB or services like AWS QLDB  
-- **Scheduler:** Quartz Scheduler, ECS Scheduled Tasks, or CloudWatch Events
-
-
-**Extensibility Ideas**
-
-- HRMS integrations to auto-sync employees  
-- Integration with cloud storage (S3, Google Drive)  
-- Localization and multi-language support for policies  
-- Embedded document viewers for tracking actual reads  
