@@ -59,7 +59,7 @@ This system enables:
 | **Role Mapping Service**    | Policy-Role mapping logic                          |
 | **Notification Service**    | Sends emails, Slack alerts, escalations            |
 | **Scheduler Service**       | Triggers periodic or SLA-based checks              |
-| **Audit Log Service**       | Writes structured logs to ELK                      |
+| **Audit Log Service**       | Writes structured logs                             |
 | **Company Service**         | Tenant configurations, settings                    |
 
 ---
