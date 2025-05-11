@@ -60,7 +60,6 @@ This system enables:
 | **Notification Service**    | Sends emails, Slack alerts, escalations            |
 | **Scheduler Service**       | Triggers periodic or SLA-based checks              |
 | **Audit Log Service**       | Writes structured logs to ELK                      |
-| **User Service**            | Employee profile, role info                        |
 | **Company Service**         | Tenant configurations, settings                    |
 
 ---
