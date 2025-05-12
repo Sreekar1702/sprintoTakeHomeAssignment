@@ -171,6 +171,8 @@ This system enables:
 - **Response**: Success message.
 
 ### 🔗 Notification Service
+
+### Send Escalation To CXO
 - **Endpoint**: `POST /api/notifications/escalate`
 - **Description**: Sends an escalation email to CXO (or escalation contact) if a policy acknowledgement is overdue.
 - **Request Payload**: Company ID, employee ID, policy ID, policy version ID, due date, escalation level (e.g., CXO).
