@@ -170,6 +170,12 @@ This system enables:
 - **Request Payload**: Action details (type, actor, target, timestamp).
 - **Response**: Success message.
 
+### 🔗 Notification Service
+- **Endpoint**: `POST /api/notifications/escalate`
+- **Description**: Sends an escalation email to CXO (or escalation contact) if a policy acknowledgement is overdue.
+- **Request Payload**: Company ID, employee ID, policy ID, policy version ID, due date, escalation level (e.g., CXO).
+- **Response**: Status message confirming escalation email was sent.
+  
 ---
 
 ## 🔄 Workflow and Functions
