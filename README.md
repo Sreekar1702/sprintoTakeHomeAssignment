@@ -10,7 +10,7 @@ This repository contains a modular, microservice-based system to manage policy g
 - [Microservices](#-microservices)
 - [Data Model](#-data-model)
 - [APIs](#-apis)
-- [Monitoring & Observability](#-monitoring--observability)
+- [Monitoring & Observability](#-monitoring-observability)
 
 ---
 
