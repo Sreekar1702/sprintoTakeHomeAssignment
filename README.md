@@ -60,7 +60,7 @@ This system enables:
 | **Notification Service**    | Sends emails, Slack alerts, escalations            |
 | **Scheduler Service**       | Triggers periodic or SLA-based checks              |
 | **Audit Log Service**       | Writes structured logs                             |
-| **Company Service**         | Tenant configurations, settings                    |
+| **Company Service**         | configurations, settings                           |
 
 ---
 
