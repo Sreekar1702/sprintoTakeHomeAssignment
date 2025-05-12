@@ -6,7 +6,7 @@ This repository contains a modular, microservice-based system to manage policy g
 
 - [Overview](#-overview)
 - [Features](#-features)
-- [Architecture](#-architecture)
+- [Architecture](#%EF%B8%8F-architecture)
 - [Microservices](#-microservices)
 - [Data Model](#-data-model)
 - [Key Services and API Endpoints](#-key-services-and-API-Endpoints)
