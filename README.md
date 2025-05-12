@@ -1,6 +1,6 @@
 # SOC 2 Compliance Policy Management System
 
-This repository contains a modular, microservice-based system to manage policy generation, approval, acknowledgement, and compliance tracking for SOC 2 and similar frameworks.
+This repository contains a modular, microservice-based system to manage policy generation, approval, acknowledgement, and compliance tracking for SOC 2.
 
 ## 📘 Table of Contents
 
