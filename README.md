@@ -57,7 +57,7 @@ This system enables:
 | **Approval Service**        | Approval workflow (CTO, policy lifecycle)          |
 | **Acknowledgement Service** | Manage acknowledgement states, due dates           |
 | **Role Mapping Service**    | Policy-Role mapping logic                          |
-| **Notification Service**    | Sends emails, Slack alerts, escalations            |
+| **Notification Service**    | Sends emails, escalations                          |
 | **Scheduler Service**       | Triggers periodic or SLA-based checks              |
 | **Audit Log Service**       | Writes structured logs                             |
 | **Company Service**         | configurations, settings                           |
